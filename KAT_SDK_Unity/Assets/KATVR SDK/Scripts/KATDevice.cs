@@ -15,9 +15,6 @@ public class KATDevice : MonoBehaviour {
     public Transform targetMoveObject, targetRotateObject, vrCameraRig, vrHandset;
     #endregion
 
-    //[HideInInspector]
-    //public KATDevice_Walk KWalk;
-
     [HideInInspector]
     public float multiply, multiplyBack;
     public enum MovementStyleList { Translate, Velocity }
@@ -27,6 +24,8 @@ public class KATDevice : MonoBehaviour {
     public Rigidbody target_Rig;
     [HideInInspector]
     public KeyCode ResetCameraKey;
+    [HideInInspector]
+    public bool useTerrain;
 
     void Awake()
     {

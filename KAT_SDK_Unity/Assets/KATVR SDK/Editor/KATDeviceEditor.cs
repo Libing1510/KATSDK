@@ -29,6 +29,7 @@ public class KATDeviceEditor : Editor {
         KATdevice.targetRotateObject = (Transform)EditorGUILayout.ObjectField(word[16], KATdevice.targetRotateObject, typeof(Transform), true);
         KATdevice.vrCameraRig = (Transform)EditorGUILayout.ObjectField(word[3], KATdevice.vrCameraRig, typeof(Transform), true);
         KATdevice.vrHandset = (Transform)EditorGUILayout.ObjectField(word[4], KATdevice.vrHandset, typeof(Transform), true);
+
         #endregion
         EditorGUILayout.Space();
         #region For KAT WALK
@@ -53,6 +54,7 @@ public class KATDeviceEditor : Editor {
             }
 
             KATdevice.ResetCameraKey = (KeyCode)EditorGUILayout.EnumPopup(word[13], KATdevice.ResetCameraKey);
+            KATdevice.useTerrain = GUILayout.Toggle(KATdevice.useTerrain, word[17]);
             EditorGUILayout.Space();
             #region Displayed Variable
             if (KATVR_Global.KDevice_Walk != null)
