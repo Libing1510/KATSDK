@@ -2,57 +2,42 @@
 using System;
 using System.Collections;
 using System.Runtime.InteropServices;
+using static KATDevice;
+
 namespace KATVR
 {
-    public class KATDevice_Walk : Singleton<KATDevice_Walk>
+    public class KATDevice_Walk:IWalk
     {
 
-        // Use this for initialization
-        void Start()
-        {
 
-        }
 
-        // Update is called once per frame
-        void Update()
-        {
-        }
         #region Basic Variable - 基础变量
 
-        /* Runtime是否启动 */
-        //public static bool Launched;
-        public bool Launched;
 
         /* 身体转向角度 */
-        //public static int bodyYaw;
-        public int bodyYaw;
+        protected int bodyYaw;
 
         /* 是否移动 */
-        //public static int isMoving;
-        public int isMoving;
+        protected int isMoving;
 
         /* 前进方向 -1 为前进 0 为停止 1 为倒退 */
-        //public static int moveDirection;
-        public int moveDirection;
+        protected int moveDirection;
 
         /* 默认移动速度 从0到1*/
-        //public static float moveSpeed;
-        public float moveSpeed;
+
+        protected float moveSpeed;
 
         /* 行走的能量值 */
-        //public static double WalkPower;
-        public double WalkPower;
+        protected double WalkPower;
 
         /* 玩家在现实中行走的距离 单位是米 */
-        //public static float meter;
-        public float meter;
+        protected int meter;
 
         /* 最大移动能量 */
-        //public static float maxMovePower, bodyRotation;
-        public float maxMovePower, bodyRotation;
+        protected float maxMovePower, bodyRotation;
 
-        //private static float newBodyYaw, newCameraYaw;
-        private float newBodyYaw, newCameraYaw;
+
+        protected float newBodyYaw, newCameraYaw;
 
 
 
@@ -63,71 +48,51 @@ namespace KATVR
         //[HideInInspector]
         public double data_walkPower;
         //[HideInInspector]
-        public int data_moveDirection, data_isMoving;
+        public int data_moveDirection;
+
+        int IWalk.BodyYaw { get => bodyYaw;}
+        int IWalk.IsMoving { get => isMoving; }
+        int IWalk.MoveDirection { get => moveDirection; }
+        float IWalk.MoveSpeed { get => moveSpeed; }
+        double IWalk.WalkPower { get => WalkPower;}
+        int IWalk.Meter { get => meter; }
+
         #endregion
 
         #endregion
 
 
         #region Function - 函数使用
-        public void Initialize(int count)
-        {
-            if (!Launched)
-            {
-                Ini(count);
-            }
-        }
-        public bool LaunchDevice()
-        {
 
-            if (CheckForLaunch())
-            {
-                Launched = true;
-            }
-            else
-            {
-                Launch();
-                Launched = true;
-            }
+        void IWalk.UpdateData()
+        {
+            KATDevice_Dll.KAT_GetWalkData(ref bodyYaw, ref WalkPower, ref moveDirection, ref isMoving, ref meter);
+            bodyYaw = (int)Math.Floor((float)bodyYaw / 1024 * 360);
+            //bodyRotation = newCameraYaw;
+            bodyRotation = (float)bodyYaw - newBodyYaw + newCameraYaw;
+ 
+            WalkPower = Math.Round((double)WalkPower, 2);
+            //moveSpeed = (float)WalkPower / 3000f;
 
-            return Launched;
-        }
-        public bool Stop()
-        {
-            Halt();
-            return true;
-        }
-        public void UpdateData()
-        {
-            if (Launched)
-            {
-                GetWalkerData(0, ref bodyYaw, ref WalkPower, ref moveDirection, ref isMoving, ref meter);
-                bodyYaw = (int)Math.Floor((float)bodyYaw / 1024 * 360);
-                //bodyRotation = newCameraYaw;
-                bodyRotation = (float)bodyYaw - newBodyYaw + newCameraYaw;           
-                WalkPower = Math.Round((double)WalkPower, 2);
-                //moveSpeed = (float)WalkPower / 3000f;
-                moveSpeed = (float)WalkPower / 10f;
-                moveDirection = -moveDirection;
-                //if (moveSpeed > 1) moveSpeed = 1;
-                //else if (moveSpeed < 0.3f) moveSpeed = 0;
-                data_bodyYaw = bodyRotation;
-                data_walkPower = WalkPower;
-                data_moveSpeed = data_DisplayedSpeed = moveSpeed*Time.deltaTime;
-                data_moveDirection = moveDirection;
-                data_isMoving = isMoving;
-                data_meter = meter;
-            }
+            moveSpeed = (float)WalkPower / 10f;
+     
+            data_moveDirection = -moveDirection;
+            //if (moveSpeed > 1) moveSpeed = 1;
+            //else if (moveSpeed < 0.3f) moveSpeed = 0;
+            data_bodyYaw = bodyRotation;
+            data_walkPower = WalkPower;
+            data_moveSpeed = data_DisplayedSpeed = moveSpeed * Time.deltaTime;
+
+
         }
 
-        public void ResetCamera(Transform handset)
+        void IWalk.ResetCamera(Transform handset)
         {
             if (handset != null)
             {
                 newCameraYaw = handset.transform.localEulerAngles.y;
-                //newCameraYaw = handset.transform.eulerAngles.y;
                 int Yaw2=0;
-                GetWalkerData(0, ref Yaw2, ref WalkPower, ref moveDirection, ref isMoving, ref meter);
+                KATDevice_Dll.KAT_GetWalkData(ref Yaw2, ref WalkPower, ref moveDirection, ref isMoving, ref meter);
                 Yaw2 = (int)Math.Floor((float)Yaw2 / 1024 * 360);
                 newBodyYaw = (float)Yaw2;
             }
@@ -136,26 +101,29 @@ namespace KATVR
                 Debug.LogError("数据不存在");
             }
         }
+
+        void IWalk.TargetTransform(Transform targetMoveObject,Transform targetRotateObject,float multiply,float multiplyBack)
+        {
+            //vrCameraRig.position = targetRotateObject.position;
+            if (data_moveDirection > 0) data_moveSpeed *= multiply;
+            else if (data_moveDirection < 0) data_moveSpeed *= multiplyBack;
+
+            targetMoveObject.position += (targetRotateObject.forward / 100 * data_moveSpeed * data_moveDirection);
+            targetRotateObject.localEulerAngles = new Vector3(targetRotateObject.localEulerAngles.x, data_bodyYaw, targetRotateObject.localEulerAngles.z);
+
+        }
+
+        void IWalk.TargetTransform(Rigidbody target_Rig, Transform targetRotateObject, float multiply, float multiplyBack)
+        {
+            if (data_moveDirection > 0) data_moveSpeed *= multiply;
+            else if (data_moveDirection < 0) data_moveSpeed *= multiplyBack;
+
+            target_Rig.velocity = targetRotateObject.forward * data_moveSpeed * data_moveDirection;
+            targetRotateObject.localEulerAngles = new Vector3(targetRotateObject.localEulerAngles.x, data_bodyYaw, targetRotateObject.localEulerAngles.z);
+        }
         #endregion
 
-        #region Dllinput - 动态链接库
 
-        [DllImport("WalkerBase", CallingConvention = CallingConvention.Cdecl)]
-        static extern void Ini(int count);
-
-        [DllImport("WalkerBase", CallingConvention = CallingConvention.Cdecl)]
-        static extern int Launch();
-
-        [DllImport("WalkerBase", CallingConvention = CallingConvention.Cdecl)]
-        static extern void Halt();
-
-        [DllImport("WalkerBase", CallingConvention = CallingConvention.Cdecl)]
-        static extern bool GetWalkerData(int index, ref int bodyyaw, ref double walkpower, ref int movedirection, ref int ismoving, ref float distancer);
-
-        [DllImport("WalkerBase", CallingConvention = CallingConvention.Cdecl)]
-        static extern bool CheckForLaunch();
-
-        #endregion
     }
 }
 

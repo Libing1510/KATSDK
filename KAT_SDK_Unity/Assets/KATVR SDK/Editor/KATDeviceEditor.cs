@@ -16,6 +16,7 @@ public class KATDeviceEditor : Editor {
     {
         
         base.OnInspectorGUI();
+      
         KATDevice KATdevice = (KATDevice)target;
         //wXML();
         LoadLanguageFile(KATdevice.displayLanguage);
@@ -29,10 +30,12 @@ public class KATDeviceEditor : Editor {
         KATdevice.targetRotateObject = (Transform)EditorGUILayout.ObjectField(word[16], KATdevice.targetRotateObject, typeof(Transform), true);
         KATdevice.vrCameraRig = (Transform)EditorGUILayout.ObjectField(word[3], KATdevice.vrCameraRig, typeof(Transform), true);
         KATdevice.vrHandset = (Transform)EditorGUILayout.ObjectField(word[4], KATdevice.vrHandset, typeof(Transform), true);
-
+        KATdevice.landformArrow = (Transform)EditorGUILayout.ObjectField(word[17], KATdevice.landformArrow, typeof(Transform), true);
         #endregion
         EditorGUILayout.Space();
         #region For KAT WALK
+
+      
         if (KATdevice.device == KATDevice.DeviceTypeList.KAT_WALK)
         {
             KATdevice.MovementStyle = (KATDevice.MovementStyleList)EditorGUILayout.EnumPopup(word[6], KATdevice.MovementStyle);
@@ -47,25 +50,27 @@ public class KATDeviceEditor : Editor {
             if (GUILayout.Button(word[15], GUILayout.Width(75))) KATdevice.multiplyBack = 0.3f;
             EditorGUILayout.EndHorizontal();
 
+            KATdevice.ResetCameraKey = (KeyCode)EditorGUILayout.EnumPopup(word[13], KATdevice.ResetCameraKey);
+            KATdevice.landform = (KATDevice.LandformList)EditorGUILayout.EnumPopup(word[18], KATdevice.landform);
+   
 
             if (GUI.changed)
             {
                 EditorUtility.SetDirty(KATdevice);
             }
-
-            KATdevice.ResetCameraKey = (KeyCode)EditorGUILayout.EnumPopup(word[13], KATdevice.ResetCameraKey);
-            KATdevice.useTerrain = GUILayout.Toggle(KATdevice.useTerrain, word[17]);
+           
             EditorGUILayout.Space();
             #region Displayed Variable
             if (KATVR_Global.KDevice_Walk != null)
             {
-                EditorGUILayout.Slider(word[7], KATVR_Global.KDevice_Walk.data_DisplayedSpeed, 0, 1);
-                EditorGUILayout.Slider(word[8], KATVR_Global.KDevice_Walk.data_bodyYaw, 0, 360);
-                if (KATVR_Global.KDevice_Walk.data_isMoving == 1)
+                //TODO
+                EditorGUILayout.Slider(word[7], KATVR_Global.KDevice_Walk.MoveSpeed, 0, 10);
+                EditorGUILayout.Slider(word[8], KATVR_Global.KDevice_Walk.BodyYaw, 0, 360);
+                if (KATVR_Global.KDevice_Walk.IsMoving == 1)
                 {
-                    if (KATVR_Global.KDevice_Walk.data_moveDirection > 0)
+                    if (KATVR_Global.KDevice_Walk.MoveDirection > 0)
                         EditorGUILayout.LabelField(word[9], word[11]);
-                    else if (KATVR_Global.KDevice_Walk.data_moveDirection < 0)
+                    else if (KATVR_Global.KDevice_Walk.MoveDirection < 0)
                         EditorGUILayout.LabelField(word[9], word[12]);
                 }
                 else

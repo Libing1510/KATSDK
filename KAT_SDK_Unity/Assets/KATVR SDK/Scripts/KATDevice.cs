@@ -12,7 +12,7 @@ public class KATDevice : MonoBehaviour {
     public LanguageList displayLanguage;
 
     [HideInInspector]
-    public Transform targetMoveObject, targetRotateObject, vrCameraRig, vrHandset;
+    public Transform targetMoveObject, targetRotateObject, vrCameraRig, vrHandset,landformArrow;
     #endregion
 
     [HideInInspector]
@@ -24,21 +24,36 @@ public class KATDevice : MonoBehaviour {
     public Rigidbody target_Rig;
     [HideInInspector]
     public KeyCode ResetCameraKey;
+
+    public enum LandformList {Enable,Disable };
     [HideInInspector]
-    public bool useTerrain;
+    public LandformList landform = LandformList.Enable;
+
+    #region
+    IWalk walkController;
+    ILandform2 landformController;
+
+
+    #endregion
 
     void Awake()
     {
+        Debug.LogError(landform);
+        KATVR_Global.KDevice = this;
         SetupDevice(device);
     }
 
     void Start()
     {
         ActiveDevice(device);
+
     }
 
-    void Update () {
-
+    void LateUpdate () {
+        if (landform==LandformList.Enable)
+        {
+            landformController?.UpdateData(landformArrow);
+        }
     }
 
     public void FixedUpdate()
@@ -60,14 +75,22 @@ public class KATDevice : MonoBehaviour {
         switch (Type)
         {
             case DeviceTypeList.KAT_WALK:
-
-                //KATDevice_Walk.Instance = this.gameObject.AddComponent<KATDevice_Walk>();
-                //KATVR_Global.KDevice_Walk = KATDevice_Walk.Instance;
-              
-                this.gameObject.AddComponent<KATDevice_Walk>();
-                KATVR_Global.KDevice_Walk = KATDevice_Walk.Instance;
-
-
+                walkController = new KATDevice_Walk();
+                KATVR_Global.KDevice_Walk = walkController;
+                switch (landform)
+                {
+                    case LandformList.Enable:
+                        landformController = new KATDevice_Landform2(targetMoveObject.gameObject,targetRotateObject);
+                        KATVR_Global.KDevice_Landform2 = landformController;
+                        landformArrow?.SetParent(null);
+                        landformArrow.localScale = Vector3.one;
+                        break;
+                    case LandformList.Disable:
+                        landformArrow?.gameObject.SetActive(false);
+                        break;
+                    default:
+                        break;
+                }
                 break;
             case DeviceTypeList.ComingSoon:
                 break;
@@ -81,8 +104,7 @@ public class KATDevice : MonoBehaviour {
         switch (Type)
         {
             case DeviceTypeList.KAT_WALK:
-                KATDevice_Walk.Instance.Initialize(1);
-                KATDevice_Walk.Instance.LaunchDevice();
+                KATDevice_Dll.KAT_Init();
                 if (target_Rig == null)
                     if (targetMoveObject.GetComponent<Rigidbody>())
                         target_Rig = targetMoveObject.GetComponent<Rigidbody>();
@@ -102,44 +124,28 @@ public class KATDevice : MonoBehaviour {
         switch (Type)
         {
             case DeviceTypeList.KAT_WALK:
-                KATDevice_Walk.Instance.UpdateData();
-                TargetTransform(MovementStyle);
+                walkController.UpdateData();
+                switch (MovementStyle)
+                {
+                    case MovementStyleList.Translate:
+                        walkController.TargetTransform(targetMoveObject, targetRotateObject, multiply, multiplyBack);
+                        break;
+                    case MovementStyleList.Velocity:
+                        walkController.TargetTransform(target_Rig,targetRotateObject,multiply,multiplyBack);
+                        break;
+                    default:
+                        break;
+                }
                 if (Input.GetKeyDown(ResetCameraKey))
-                    KATDevice_Walk.Instance.ResetCamera(vrHandset);
+                    walkController.ResetCamera(vrHandset);
                 break;
             case DeviceTypeList.ComingSoon:
                 break;
             default:
                 break;
         }
+
     }
     #endregion
 
-    #region Function For KAT WALK
-
-    void TargetTransform(MovementStyleList Type)
-    {
-        //vrCameraRig.position = targetRotateObject.position;
-        if (KATDevice_Walk.Instance.data_moveDirection > 0) KATDevice_Walk.Instance.data_moveSpeed *= multiply;
-        else if (KATDevice_Walk.Instance.data_moveDirection < 0) KATDevice_Walk.Instance.data_moveSpeed *= multiplyBack;
-        switch (Type)
-        {
-            #region Translate
-            case MovementStyleList.Translate:
-                //targetMoveObject.Translate(targetRotateObject.forward / 100 * KATDevice_Walk.Instance.data_moveSpeed * KATDevice_Walk.Instance.data_moveDirection);
-                targetMoveObject.position += (targetRotateObject.forward / 100 * KATDevice_Walk.Instance.data_moveSpeed * KATDevice_Walk.Instance.data_moveDirection);
-                targetRotateObject.localEulerAngles = new Vector3(targetRotateObject.localEulerAngles.x, KATDevice_Walk.Instance.data_bodyYaw, targetRotateObject.localEulerAngles.z);
-                break;
-            #endregion
-            #region Velocity
-            case MovementStyleList.Velocity:
-                target_Rig.velocity = targetRotateObject.forward * KATDevice_Walk.Instance.data_moveSpeed * KATDevice_Walk.Instance.data_moveDirection;
-                targetRotateObject.localEulerAngles = new Vector3(targetRotateObject.localEulerAngles.x, KATDevice_Walk.Instance.data_bodyYaw, targetRotateObject.localEulerAngles.z);
-                break;
-            #endregion
-            default:
-                break;
-        }
-    }
-    #endregion
 }
