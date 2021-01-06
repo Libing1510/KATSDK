@@ -29,7 +29,7 @@ public class OverweightTrigger : MonoBehaviour
         if (other.tag == "Player")
         {
             Debug.Log("exit OverweightTrigger " + level);
-            KATVR.KATVR_Global.KDevice_Landform2.RESET_SLOWLY = 1;
+
 
         }
     }

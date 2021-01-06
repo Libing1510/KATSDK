@@ -28,7 +28,6 @@ public class WeightLessnessTrigger : MonoBehaviour
         if (other.tag == "Player")
         {
             Debug.Log("exit WeightLessnessTrigger " + level);
-            KATVR.KATVR_Global.KDevice_Landform2.RESET_SLOWLY = 1;
 
         }
     }

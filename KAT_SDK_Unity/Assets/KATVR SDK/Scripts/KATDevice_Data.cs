@@ -20,6 +20,23 @@ namespace KATVR
             return str;
         }
 
+        public static string GetString(this Walk_Pro_Landform_Control_Data_V2 data)
+        {
+            string str =
+                $"快速复位: {data.RESET_QUICKLY}/n" +
+                $"缓慢复位: {data.RESET_SLOWLY}/n" +
+                $"超重: {data.OVERWEIGHT}/n" +
+                $"失重: {data.WEIGHTLESSNESS}/n" +
+                $"短颤: {data.TREMOR_SHORT}/n" +
+                $"震动: {data.QUIVER}/n" +
+                $"晃动: {data.SHAKE_LEVEL}/n" +
+                $"楼层: {data.LIFT}/n{data.MATRIX.GetString()}";
+
+
+            return str;
+        }
+
+
     }
 
 
@@ -151,6 +168,8 @@ namespace KATVR
         }
 
     }
+
+
 
 
     /// <summary>

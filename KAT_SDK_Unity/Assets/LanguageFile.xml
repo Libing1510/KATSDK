@@ -17,8 +17,8 @@
     <word index="14">后退速度倍率</word>
     <word index="15">默认值</word>
     <word index="16">目标旋转坐标</word>
-    <word index="17">使用地形模拟</word>
-    <word index="18">输入词汇</word>
+    <word index="17">地形法线箭头</word>
+    <word index="18">使用地形模拟功能</word>
     <word index="19">输入词汇</word>
     <word index="20">输入词汇</word>
     <word index="21">输入词汇</word>
@@ -51,8 +51,8 @@
     <word index="14">Backward Multiple</word>
     <word index="15">Default</word>
     <word index="16">Rotation Object</word>
-    <word index="17">Use terrain simulation</word>
-    <word index="18">输入词汇</word>
+    <word index="17">Terrain normal arrow</word>
+    <word index="18">Use terrain simulation function</word>
     <word index="19">输入词汇</word>
     <word index="20">输入词汇</word>
     <word index="21">输入词汇</word>

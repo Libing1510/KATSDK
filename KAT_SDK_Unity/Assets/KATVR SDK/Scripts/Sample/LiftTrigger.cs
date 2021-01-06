@@ -8,19 +8,40 @@ public class LiftTrigger : MonoBehaviour
     public TextMesh textMesh;
 
     public int level;
+    bool enter;
 
+    Vector3 origin;
     private void Start()
     {
         textMesh.text = "电梯层" + level;
+        origin = transform.position;
     }
+
+    private void Update()
+    {
+        textMesh.text = "电梯层" + KATVR.KATVR_Global.KDevice_Landform2.LIFT;
+        if (enter)
+        {
+            switch (level)
+            {
+                case 0:
+                    KATVR.KATVR_Global.KDevice_Landform2.LIFT = 1;
+                    break;
+
+
+                default:
+                    break;
+            }
+        }
+    }   
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
         {
-            KATVR.KATVR_Global.KDevice_Landform2.LIFT = level;
-            Debug.Log("enter LiftTrigger " + level);
 
+            Debug.Log("enter LiftTrigger " + level);
+            StartCoroutine(Move());
         }
     }
 
@@ -30,11 +51,10 @@ public class LiftTrigger : MonoBehaviour
         {
             Debug.Log("exit LiftTrigger " + level);
             KATVR.KATVR_Global.KDevice_Landform2.RESET_SLOWLY = 1;
-
+            StopAllCoroutines();
+            transform.position = origin;
         }
     }
-
-
 
     private void Reset()
     {
@@ -49,7 +69,7 @@ public class LiftTrigger : MonoBehaviour
             ground.transform.localScale = new Vector3(4, 0.1f, 4);
             ground.transform.localRotation = Quaternion.identity;
             ground.GetComponent<MeshRenderer>().material = Resources.Load<Material>("Matericals/GroundIcon");
-            ground.GetComponent<BoxCollider>().enabled = false;
+
         }
 
         BoxCollider box = transform.GetComponent<BoxCollider>();
@@ -77,4 +97,68 @@ public class LiftTrigger : MonoBehaviour
         }
     }
 
+    IEnumerator LiftZero(int i)
+    {
+        Debug.Log(1);
+        if (i<level)
+        {
+            Debug.Log(2);
+            level = i;
+            KATVR.KATVR_Global.KDevice_Landform2.WEIGHTLESSNESS=1;
+            yield return new WaitForSeconds(1.6f);
+            KATVR.KATVR_Global.KDevice_Landform2.LIFT -= 1;
+            Vector3 pos = transform.position;
+            while (transform.position.y>pos.y-2)
+            {
+                Debug.Log(transform.position);
+                var p = transform.position;
+                p.y -= Time.deltaTime;
+                transform.position = p;
+                yield return null;
+            }
+            KATVR.KATVR_Global.KDevice_Landform2.OVERWEIGHT = 1;
+            yield return new WaitForSeconds(1.6f);
+            //KATVR.KATVR_Global.KDevice_Landform2.RESET_QUICKLY = 1;
+        }
+        else
+        {
+            Debug.Log(3);
+            level = i;
+            KATVR.KATVR_Global.KDevice_Landform2.WEIGHTLESSNESS = 1;
+            yield return new WaitForSeconds(1.6f);
+            KATVR.KATVR_Global.KDevice_Landform2.LIFT += 1;
+            Vector3 pos = transform.position;
+            while (transform.position.y < pos.y +2)
+            {
+                Debug.Log(transform.position);
+                var p = transform.position;
+                p.y += Time.deltaTime;
+                transform.position = p;
+                yield return null;
+            }
+            KATVR.KATVR_Global.KDevice_Landform2.OVERWEIGHT = 1;
+            yield return new WaitForSeconds(1.6f);
+            //KATVR.KATVR_Global.KDevice_Landform2.RESET_QUICKLY = 1;
+        }
+    }
+
+    IEnumerator Move()
+    {
+        yield return LiftZero(1);
+        yield return new WaitForSeconds(3);
+        yield return LiftZero(2);
+        yield return new WaitForSeconds(3);
+        yield return LiftZero(1);
+        yield return new WaitForSeconds(3);
+        yield return LiftZero(0);
+        yield return new WaitForSeconds(3);
+        yield return LiftZero(-1);
+        yield return new WaitForSeconds(3);
+        yield return LiftZero(-2);
+        yield return new WaitForSeconds(3);
+        yield return LiftZero(-1);
+        yield return new WaitForSeconds(3);
+        yield return LiftZero(0);
+    }
+        
 }

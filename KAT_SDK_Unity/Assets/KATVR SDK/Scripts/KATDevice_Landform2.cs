@@ -29,7 +29,7 @@ public class KATDevice_Landform2 : ILandform2
 
     private RaycastHit hit;
     private Quaternion qua;
-
+    private bool action;
 
 
     public KATDevice_Landform2(GameObject player, Transform rotate)
@@ -39,14 +39,14 @@ public class KATDevice_Landform2 : ILandform2
         walk_Pro_Landform_Get = new Walk_Pro_Landform_Control_Data_V2();
         walk_Pro_Landform_Set = new Walk_Pro_Landform_Control_Data_V2();
 
-        walk_Pro_Landform_Set.QUIVER = 1;
-        walk_Pro_Landform_Set.LIFT = 1;
-        walk_Pro_Landform_Set.OVERWEIGHT = 1;
+        walk_Pro_Landform_Set.QUIVER = 0;
+        walk_Pro_Landform_Set.LIFT = 0;
+        walk_Pro_Landform_Set.OVERWEIGHT = 0;
         walk_Pro_Landform_Set.RESET_QUICKLY = 0;
-        walk_Pro_Landform_Set.RESET_SLOWLY = 1;
-        walk_Pro_Landform_Set.SHAKE_LEVEL = 2;
-        walk_Pro_Landform_Set.TREMOR_SHORT = 1;
-        walk_Pro_Landform_Set.WEIGHTLESSNESS = 1;
+        walk_Pro_Landform_Set.RESET_SLOWLY = 0;
+        walk_Pro_Landform_Set.SHAKE_LEVEL = 0;
+        walk_Pro_Landform_Set.TREMOR_SHORT = 0;
+        walk_Pro_Landform_Set.WEIGHTLESSNESS = 0;
     }
 
 
@@ -54,14 +54,14 @@ public class KATDevice_Landform2 : ILandform2
 
     #region
 
-    int ILandform2.RESET_QUICKLY { get => walk_Pro_Landform_Set.RESET_QUICKLY; set => walk_Pro_Landform_Set.RESET_QUICKLY=value; }
-    int ILandform2.RESET_SLOWLY { get => walk_Pro_Landform_Set.RESET_SLOWLY; set => walk_Pro_Landform_Set.RESET_SLOWLY = value; }
-    int ILandform2.OVERWEIGHT { get => walk_Pro_Landform_Set.OVERWEIGHT; set => walk_Pro_Landform_Set.OVERWEIGHT=value; }
-    int ILandform2.WEIGHTLESSNESS { get => walk_Pro_Landform_Set.WEIGHTLESSNESS; set => walk_Pro_Landform_Set.WEIGHTLESSNESS=value; }
-    int ILandform2.TREMOR_SHORT { get => walk_Pro_Landform_Set.TREMOR_SHORT; set => walk_Pro_Landform_Set.TREMOR_SHORT=value; }
-    int ILandform2.QUIVER { get => walk_Pro_Landform_Set.QUIVER; set => walk_Pro_Landform_Set.QUIVER=value; }
-    int ILandform2.SHAKE_LEVEL { get => walk_Pro_Landform_Set.SHAKE_LEVEL; set =>walk_Pro_Landform_Set.SHAKE_LEVEL=value; }
-    int ILandform2.LIFT { get => walk_Pro_Landform_Set.LIFT; set => walk_Pro_Landform_Set.LIFT=value; }
+    int ILandform2.RESET_QUICKLY {set  { action =true; walk_Pro_Landform_Set.RESET_QUICKLY=value; }}
+    int ILandform2.RESET_SLOWLY { set { action = true; walk_Pro_Landform_Set.RESET_SLOWLY = value; } }
+    int ILandform2.OVERWEIGHT {  set  { action =true; walk_Pro_Landform_Set.OVERWEIGHT=value; }}
+    int ILandform2.WEIGHTLESSNESS {  set  { action =true; walk_Pro_Landform_Set.WEIGHTLESSNESS=value; }}
+    int ILandform2.TREMOR_SHORT {  set  { action =true; walk_Pro_Landform_Set.TREMOR_SHORT=value; }}
+    int ILandform2.QUIVER { get => walk_Pro_Landform_Set.QUIVER; set { action = true; walk_Pro_Landform_Set.QUIVER = value; }}
+    int ILandform2.SHAKE_LEVEL { get => walk_Pro_Landform_Set.SHAKE_LEVEL; set { action = true; walk_Pro_Landform_Set.SHAKE_LEVEL = value; } }
+    int ILandform2.LIFT { get => walk_Pro_Landform_Set.LIFT; set  { action =true; walk_Pro_Landform_Set.LIFT=value; }}
     Matrix33 ILandform2.MATRIX { get => walk_Pro_Landform_Set.MATRIX; }
 
 
@@ -81,7 +81,7 @@ public class KATDevice_Landform2 : ILandform2
                 //qua = Quaternion.LookRotation(rotateObj.forward, hit.normal);
 
                 qua = Quaternion.FromToRotation(Vector3.up, hit.normal);
-                Debug.Log(qua.eulerAngles);
+
                 transform.rotation = qua;
             }
         }
@@ -136,18 +136,31 @@ public class KATDevice_Landform2 : ILandform2
 
 
 
-        var data = new Walk_Pro_Landform_Control_Data_V2();
-        data.MATRIX = matrix;
-        data.QUIVER = 1;
-        data.HEART_BEAT = heart;
 
+        //读取地形模拟数据的结构体
+        KATDevice_Dll.KAT_LANDFORM_CONTROL_DATA_V2_GET(ref walk_Pro_Landform_Get);
+        if (!action)
+        {
+            walk_Pro_Landform_Set.LIFT = walk_Pro_Landform_Get.LIFT;
+            walk_Pro_Landform_Set.OVERWEIGHT = walk_Pro_Landform_Get.OVERWEIGHT;
+            walk_Pro_Landform_Set.QUIVER = walk_Pro_Landform_Get.QUIVER;
+            walk_Pro_Landform_Set.RESET_QUICKLY = walk_Pro_Landform_Get.RESET_QUICKLY;
+            walk_Pro_Landform_Set.RESET_SLOWLY = walk_Pro_Landform_Get.RESET_SLOWLY;
+            walk_Pro_Landform_Set.SHAKE_LEVEL = walk_Pro_Landform_Get.SHAKE_LEVEL;
+            walk_Pro_Landform_Set.TREMOR_SHORT = walk_Pro_Landform_Get.TREMOR_SHORT;
+            walk_Pro_Landform_Set.WEIGHTLESSNESS = walk_Pro_Landform_Get.WEIGHTLESSNESS;
+        }
+        else
+        {
+            action = false;
+        }
+
+        Debug.Log(walk_Pro_Landform_Set.GetString());
         //更新地形模拟数据
         KATDevice_Dll.KAT_LANDFORM_CONTROL_DATA_V2_UPDATE(walk_Pro_Landform_Set);
 
 
 
-        //读取地形模拟数据的结构体
-        KATDevice_Dll.KAT_LANDFORM_CONTROL_DATA_V2_GET(ref walk_Pro_Landform_Set);
 
 
     }

@@ -29,7 +29,7 @@ public class TremorShortTrigger : MonoBehaviour
         if (other.tag == "Player")
         {
             Debug.Log("exit TremorShortTrigger " + level);
-            KATVR.KATVR_Global.KDevice_Landform2.RESET_SLOWLY = 1;
+
 
         }
     }

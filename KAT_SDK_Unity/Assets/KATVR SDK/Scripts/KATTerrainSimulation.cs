@@ -377,16 +377,16 @@ public class KATTerrainSimulation
     /// 0：初始化成功
     /// 1：已初始化
     /// </returns>
-    [DllImport("WalkerBase_2B.dll", CallingConvention = CallingConvention.Cdecl)]
+    [DllImport("WalkerBase_2B", CallingConvention = CallingConvention.Cdecl)]
     public extern static int Init_2B();
 
-    [DllImport("WalkerBase_2B.dll", CallingConvention = CallingConvention.Cdecl)]
+    [DllImport("WalkerBase_2B", CallingConvention = CallingConvention.Cdecl)]
     public extern static int LANDFORM_CONTROL_DATA_UPDATE(Walk_Pro_Landform_Control_Data data);
 
-    [DllImport("WalkerBase_2B.dll", CallingConvention = CallingConvention.Cdecl)]
+    [DllImport("WalkerBase_2B", CallingConvention = CallingConvention.Cdecl)]
     public extern static int LANDFORM_CONTROL_DATA_GET(ref Walk_Pro_Landform_Control_Data data);
 
-    [DllImport("WalkerBase_2B.dll", CallingConvention = CallingConvention.Cdecl)]
+    [DllImport("WalkerBase_2B", CallingConvention = CallingConvention.Cdecl)]
     public extern static int WALK_PRO_REPLAY_DATA_GET(ref Walk_Pro_Replay_Data data);
 
     #endregion DLL

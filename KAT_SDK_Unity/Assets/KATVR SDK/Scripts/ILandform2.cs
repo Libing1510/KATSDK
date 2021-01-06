@@ -9,27 +9,27 @@ public interface ILandform2
     /// <summary>
     /// 快速复位，需要内容置1后触发，动作完成后Runtime置0
     /// </summary>
-    int RESET_QUICKLY { get; set; }
+    int RESET_QUICKLY {  set; }
 
     /// <summary>
     /// 缓慢复位，需要内容置1后触发，动作完成后Runtime置0
     /// </summary>
-    int RESET_SLOWLY { get; set; }
+    int RESET_SLOWLY { set; }
 
     /// <summary>
     /// 超重，需要内容置1后触发，动作完成后Runtime置0
     /// </summary>
-    int OVERWEIGHT { get; set; }
+    int OVERWEIGHT {  set; }
 
     /// <summary>
     /// 失重，需要内容置1后触发，动作完成后Runtime置0
     /// </summary>
-    int WEIGHTLESSNESS { get; set; }
+    int WEIGHTLESSNESS {  set; }
 
     /// <summary>
     /// 短颤，需要内容置1后触发，动作完成后Runtime置0
     /// </summary>
-    int TREMOR_SHORT { get; set; }
+    int TREMOR_SHORT { set; }
 
     /// <summary>
     /// 震动，需要内容置震动等级0,1,2

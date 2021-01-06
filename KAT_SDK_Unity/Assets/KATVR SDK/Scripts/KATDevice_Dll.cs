@@ -178,18 +178,18 @@ namespace KATVR
         /// 0：初始化成功
         /// 1：已初始化
         /// </returns>
-        [DllImport("WalkerBase_2B.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("WalkerBase_2B", CallingConvention = CallingConvention.Cdecl)]
         extern static int Init_2B();
 
 
-        [DllImport("WalkerBase_2B.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("WalkerBase_2B", CallingConvention = CallingConvention.Cdecl)]
         extern static int LANDFORM_CONTROL_DATA_V2_UPDATE(Walk_Pro_Landform_Control_Data_V2 data);
 
 
-        [DllImport("WalkerBase_2B.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("WalkerBase_2B", CallingConvention = CallingConvention.Cdecl)]
         extern static int LANDFORM_CONTROL_DATA_V2_GET(ref Walk_Pro_Landform_Control_Data_V2 data);
 
-        [DllImport("WalkerBase_2B.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("WalkerBase_2B", CallingConvention = CallingConvention.Cdecl)]
         extern static int Get_Action_2C(ref int Action);
 
 
@@ -206,7 +206,7 @@ namespace KATVR
         /// -1:未初始化
         /// 0:获取成功
         /// </returns>
-        [DllImport("WalkerBase_2B.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("WalkerBase_2B", CallingConvention = CallingConvention.Cdecl)]
         extern static int Get_Data_2B(ref int Bodyyaw, ref double WalkPower, ref int MoveDirection, ref int IsMoving, ref int Distance);
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace KATVR
         /// -1:未初始化
         /// 0:获取成功
         /// </returns>
-        [DllImport("WalkerBase_2B.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("WalkerBase_2B", CallingConvention = CallingConvention.Cdecl)]
         extern static int Get_Action_2B(ref int Action);
         #endregion 行走
 
@@ -230,7 +230,7 @@ namespace KATVR
         /// 0：更新成功
         /// -1：更新失败，未初始化成功
         /// </returns>
-        [DllImport("WalkerBase_2B.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("WalkerBase_2B", CallingConvention = CallingConvention.Cdecl)]
         extern static int LANDFORM_CONTROL_DATA_UPDATE(Walk_Pro_Landform_Control_Data data);
 
         /// <summary>
@@ -241,7 +241,7 @@ namespace KATVR
         /// 返回：0：更新成功
         /// -1：更新失败，未初始化成功
         /// </returns>
-        [DllImport("WalkerBase_2B.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("WalkerBase_2B", CallingConvention = CallingConvention.Cdecl)]
         extern static int LANDFORM_CONTROL_DATA_GET(ref Walk_Pro_Landform_Control_Data data);
 
         /// <summary>
@@ -252,7 +252,7 @@ namespace KATVR
         /// 返回：0：更新成功
         /// -1：更新失败，未初始化成功
         /// </returns>
-        [DllImport("WalkerBase_2B.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("WalkerBase_2B", CallingConvention = CallingConvention.Cdecl)]
         extern static int WALK_PRO_REPLAY_DATA_GET(ref Walk_Pro_Replay_Data data);
 
 
