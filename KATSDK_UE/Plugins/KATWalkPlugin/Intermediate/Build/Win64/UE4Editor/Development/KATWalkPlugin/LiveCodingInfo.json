@@ -1,0 +1,16 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.KATWalkPlugin.cpp.obj": [
+			"KATDataCore.cpp.obj",
+			"KATPluginDll.cpp.obj",
+			"KATWalkPlugin.cpp.obj",
+			"KATWalkPluginLibrary.cpp.obj"
+		],
+		"Module.KATWalkPlugin.gen.cpp.obj": [
+			"KATDataCore.gen.cpp.obj",
+			"KATWalkPlugin.init.gen.cpp.obj",
+			"KATWalkPluginLibrary.gen.cpp.obj"
+		]
+	}
+}

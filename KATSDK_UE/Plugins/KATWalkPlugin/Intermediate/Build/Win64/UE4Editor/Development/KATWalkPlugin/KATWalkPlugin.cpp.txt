@@ -1,0 +1,2 @@
+H:\UE4\Unreal Projects\KAT_SDK\KATSDK\KATSDK_UE\Plugins\KATWalkPlugin\Intermediate\Build\Win64\UE4Editor\Development\KATWalkPlugin\Definitions.KATWalkPlugin.h
+H:\UE4\Unreal Projects\KAT_SDK\KATSDK\KATSDK_UE\Plugins\KATWalkPlugin\Source\KATWalkPlugin\Public\KATWalkPlugin.h

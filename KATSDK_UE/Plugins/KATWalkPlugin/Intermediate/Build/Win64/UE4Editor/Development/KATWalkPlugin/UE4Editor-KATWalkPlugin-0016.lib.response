@@ -1,0 +1,14 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UE4Editor-KATWalkPlugin-0016.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"H:\UE4\Unreal Projects\KAT_SDK\KATSDK\KATSDK_UE\Intermediate\Build\Win64\KATSDK_UEEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h.obj"
+"H:\UE4\Unreal Projects\KAT_SDK\KATSDK\KATSDK_UE\Plugins\KATWalkPlugin\Intermediate\Build\Win64\UE4Editor\Development\KATWalkPlugin\Module.KATWalkPlugin.cpp.obj"
+"H:\UE4\Unreal Projects\KAT_SDK\KATSDK\KATSDK_UE\Plugins\KATWalkPlugin\Intermediate\Build\Win64\UE4Editor\Development\KATWalkPlugin\Module.KATWalkPlugin.gen.cpp.obj"
+"H:\UE4\Unreal Projects\KAT_SDK\KATSDK\KATSDK_UE\Plugins\KATWalkPlugin\Intermediate\Build\Win64\UE4Editor\Development\KATWalkPlugin\Default.rc2.res"
+/OUT:"H:\UE4\Unreal Projects\KAT_SDK\KATSDK\KATSDK_UE\Plugins\KATWalkPlugin\Intermediate\Build\Win64\UE4Editor\Development\KATWalkPlugin\UE4Editor-KATWalkPlugin-0016.lib"
+/INCLUDE:IMPLEMENT_MODULE_KATWalkPlugin
